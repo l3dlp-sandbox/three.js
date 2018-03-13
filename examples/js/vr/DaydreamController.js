@@ -17,15 +17,16 @@ THREE.DaydreamController = function () {
 
 	function findGamepad() {
 
-		// iterate across gamepads as the Daydream Controller may not be in position 0
+		// iterate across gamepads as the Daydream Controller may not be
+		// in position 0
 
-		var gamepads = navigator.getGamepads();
+		var gamepads = navigator.getGamepads && navigator.getGamepads();
 
 		for ( var i = 0; i < 4; i ++ ) {
 
 			var gamepad = gamepads[ i ];
 
-			if ( gamepad !== null && ( gamepad.id === 'Daydream Controller' ) ) {
+			if ( gamepad && ( gamepad.id === 'Daydream Controller' ) ) {
 
 				return gamepad;
 
@@ -41,7 +42,7 @@ THREE.DaydreamController = function () {
 
 	};
 
-	this.getTouchPadState = function () {
+	this.getTouchpadState = function () {
 
 		return touchpadIsPressed;
 
@@ -53,9 +54,9 @@ THREE.DaydreamController = function () {
 
 		if ( gamepad !== undefined && gamepad.pose !== undefined ) {
 
-			if ( pose === null ) return; // no user action yet
-
 			var pose = gamepad.pose;
+
+			if ( pose === null ) return; // no user action yet
 
 			//  orientation
 
@@ -66,7 +67,7 @@ THREE.DaydreamController = function () {
 
 			// angular velocity
 
-			if ( pose.angularVelocity !== null || ! angularVelocity.equals( pose.angularVelocity ) ) {
+			if ( pose.angularVelocity !== null && ! angularVelocity.equals( pose.angularVelocity ) ) {
 
 				angularVelocity.fromArray( pose.angularVelocity );
 				scope.dispatchEvent( { type: 'angularvelocitychanged', angularVelocity: angularVelocity } );
@@ -99,6 +100,15 @@ THREE.DaydreamController = function () {
 			scope.visible = false;
 
 		}
+
+	};
+
+	// DEPRECATED
+
+	this.getTouchPadState = function () {
+
+		console.warn( 'THREE.DaydreamController: getTouchPadState() is now getTouchpadState()' );
+		return touchpadIsPressed;
 
 	};
 
